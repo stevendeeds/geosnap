@@ -1,56 +1,58 @@
-<!DOCTYPE html>
-<html>
-    <head>
-        <meta charset="utf-8" />
+<!DOCTYPE html>   
+<html lang="en" class="no-js"> <!--<![endif]-->
+<head>
+		 <meta charset="utf-8" />
         <meta name="format-detection" content="telephone=no" />
-        <!-- WARNING: for iOS 7, remove the width=device-width and height=device-height attributes. See https://issues.apache.org/jira/browse/CB-4323 -->
         <meta name="viewport" content="target-densityDpi=device-dpi, width=device-width, height=device-height, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no" />
-        <title>Hello World</title>
-		<link rel="stylesheet" href="libs/gumby/css/gumby.css">
-		<script src="libs/gumby/js/libs/modernizr-2.6.2.min.js"></script>
-
+		<link rel="stylesheet" href="css/gumby.css">
+		<script src="js/jquery-1.10.1.min.js"></script>
 		<script type="text/javascript" src="http://use.typekit.net/fma2eqz.js"></script>
 		<script type="text/javascript">try{Typekit.load();}catch(e){}</script>
 		<link rel="stylesheet" href="css/styles.css" />
-		
-    </head>
-    <body>
-    	<header>
+	<script src="js/handlebars-v1.3.0.js"></script>
+	
+</head>
+<!-- !Body -->
+<body>
+	<header>
 	    	<img src="img/geosnapLogoType.svg" />
     	</header>
     	<nav>
-		    <a href="index.html" class="localnav active">&nbsp;</a><a href="create.html" class="createnav">&nbsp;</a><a href="notifications.html" class="noticesnav">&nbsp;</a><a href="settings.html" class="settingsnav">&nbsp;</a>
+		    <a class="localnav active" name="home">&nbsp;</a><a class="createnav" name="create">&nbsp;</a><a class="noticesnav" name="notifications">&nbsp;</a><a class="settingsnav" name="settings">&nbsp;</a>
 		</nav>
-		<div>
-			<form action="" id="find_posts">
-				<input type="hidden" value="" name="auth_token" />
-				<input type="hidden" value="" name="handle" />
-				<input type="hidden" value="posts_near_me" name="request" />
-				<input type="hidden" class="input xwide" name="lat" />
-				<input type="hidden" class="input xwide" name="long"  />
-  			</form>
-    		<div id="posts_near_me">
-				<div id="floatingCirclesG">
-					<div class="f_circleG" id="frotateG_01">
-					</div>
-					<div class="f_circleG" id="frotateG_02">
-					</div>
-					<div class="f_circleG" id="frotateG_03">
-					</div>
-					<div class="f_circleG" id="frotateG_04">
-					</div>
-					<div class="f_circleG" id="frotateG_05">
-					</div>
-					<div class="f_circleG" id="frotateG_06">
-					</div>
-					<div class="f_circleG" id="frotateG_07">
-					</div>
-					<div class="f_circleG" id="frotateG_08">
-				</div>
-			</div>
-	    		<!--
-
-	    		<div class='row feed_item'>
+	<div id="content-placeholder">
+	</div><!--!/#container -->
+	<span id="holdinfo" style="display: none;"></span>
+	<form action="" id="form">
+		<input type="hidden" value="" name="auth_token" />
+		<input type="hidden" value="" name="handle" />
+		<input type="hidden" value="posts_near_me" name="request" />
+		<input type="hidden" name="lat" />
+		<input type="hidden" name="long"  />
+		<input type="hidden" name="post_data" />
+		
+		
+	</form>
+		
+	<script id="home" type="text/x-handlebars-template">
+		<table>
+	    <thead>
+	      <th>Username</th>
+	      <th>Real Name</th>
+	      <th>Email</th>
+	    </thead>
+	    <tbody>
+	      {{#users}}
+	        <tr>
+	          <td>{{username}}</td>
+	          <td>{{firstName}} {{lastName}}</td>
+	          <td>{{email}}</td>
+	        </tr>
+	      {{/users}}
+	    </tbody>
+	  </table>
+<!--
+		<div class='row feed_item'>
 	    			<div class='twelve columns'>
 	    				<div class='author_info'>
 	    					<img src='https://scontent-a.xx.fbcdn.net/hphotos-xpa1/t1.0-9/1975209_10151997796502775_2072540644_n.jpg' />
@@ -76,13 +78,56 @@
 					</div>
 				</div>
 -->
-    		
-	    		
-    		</div>
+				
+				<!--
+<div class='row feed_item' id='"+special+"'>
+					<div class='twelve columns'>
+						<div class='author_info'>
+							<img src='"+author_avatar+"' />
+							<strong>"+handle+"</strong>
+							<div class='clearfix'></div>
+						</div>
+					<div>
+						<img src='"+data_location+"' class='data_img' onClick='likePost(\""+post_token+"\", this)' />
+					</div>
+					<div class='buttons'>
+						<div class='eye'>
+							<img src='img/eye_seen.svg' alt='' />
+							<span>"+times_seen+"</span>
+							<div class='clearfix'></div>
+						</div>
+						<div class='loved'>
+							<img src='img/heart_unloved.svg' alt='' />
+							<span>"+times_liked+"</span>
+							<div class='clearfix'></div>
+						</div>
+						<div class='more'></div>
+					</div>
+				</div>
+			</div>
+-->
+	</script>
+	<script id="create" type="text/x-handlebars-template">
+		<div class="row">
+			<div class="twelve columns">
+				<div class="big_button"><a onclick="capturePhotoEdit();"><i class="icon-camera"></i></a></div>
+			</div>
 		</div>
-		<script type="text/javascript" src="js/all-min.js"></script>
-		<script>
-			locateMe();
-		</script>
-    </body>
+		
+		<img style="display:none;" id="smallImage" src="" class="proposedPostImage" />
+			
+		
+		<div class="secondary_big_button">
+		  <a href="#" id="new_post_submit">SHARE HERE <i class="icon-location"></i></a>
+		</div>
+	</script>
+	<script id="notifications" type="text/x-handlebars-template">
+		Template 3
+	</script>
+	<script id="settings" type="text/x-handlebars-template">
+		Template 4
+	</script>
+	
+	<script src="js/min/app-min.js"></script>
+</body>
 </html>
