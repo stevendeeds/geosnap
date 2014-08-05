@@ -15,14 +15,17 @@
 <!-- !Body -->
 <body>
 	<header>
-	    	<img src="img/geosnapLogoType.svg" />
-    	</header>
-    	<nav>
-		    <a class="localnav active" name="home">&nbsp;</a><a class="createnav" name="create">&nbsp;</a><a class="noticesnav" name="notifications">&nbsp;</a><a class="settingsnav" name="settings">&nbsp;</a>
-		</nav>
+    	<img src="img/geosnapLogoType.svg" />
+	</header>
+	<nav>
+	    <a class="localnav active" name="posts_near_me">&nbsp;</a><a class="createnav" name="new_post">&nbsp;</a><a class="noticesnav" name="notifications">&nbsp;</a><a class="settingsnav" name="preferences">&nbsp;</a>
+	</nav>
+	
+	
 	<div id="content-placeholder">
+		<!--THIS IS WHERE THE TEMPLATE DATA LOADS IN-->
 	</div><!--!/#container -->
-	<span id="holdinfo" style="display: none;"></span>
+
 	<form action="" id="form">
 		<input type="hidden" value="" name="auth_token" />
 		<input type="hidden" value="" name="handle" />
@@ -30,84 +33,42 @@
 		<input type="hidden" name="lat" />
 		<input type="hidden" name="long"  />
 		<input type="hidden" name="post_data" />
-		
-		
+		<input type="hidden" name="preference_type" />
 	</form>
-		
-	<script id="home" type="text/x-handlebars-template">
-		<table>
-	    <thead>
-	      <th>Username</th>
-	      <th>Real Name</th>
-	      <th>Email</th>
-	    </thead>
-	    <tbody>
-	      {{#users}}
-	        <tr>
-	          <td>{{username}}</td>
-	          <td>{{firstName}} {{lastName}}</td>
-	          <td>{{email}}</td>
-	        </tr>
-	      {{/users}}
-	    </tbody>
-	  </table>
-<!--
-		<div class='row feed_item'>
+	<div id="alerts" style="word-break:break-all;"></div>
+	<script id="posts_near_me" type="text/x-handlebars-template">
+		{{#each response}}
+			
+			
+			<div class='row feed_item'>
 	    			<div class='twelve columns'>
 	    				<div class='author_info'>
-	    					<img src='https://scontent-a.xx.fbcdn.net/hphotos-xpa1/t1.0-9/1975209_10151997796502775_2072540644_n.jpg' />
-	    					<strong>stevendeeds</strong>
+	    					<img src='{{author_avatar}}' />
+	    					<strong>{{author_handle}}</strong>
 	    					<div class='clearfix'></div>
 							</div>
 		    			<div>
-		    				<img src='https://fbcdn-sphotos-h-a.akamaihd.net/hphotos-ak-xpa1/t1.0-9/1606965_10152214992637775_3173819783811997189_n.jpg' class='data_img' />
+		    				<img src='{{data_location}}' class='data_img' />
 		    			</div>
 		    			<div class='buttons'>
 		    				<div class='eye'>
 		    					<img src='img/eye_seen.svg' alt='' />
-		    					<span>1,234</span>
+		    					<span>{{times_seen}}</span>
 		    					<div class='clearfix'></div>
 		    				</div>
 		    				<div class='loved'>
 		    					<img src='img/heart_unloved.svg' alt='' />
-		    					<span>234</span>
+		    					<span>{{times_liked}}</span>
 		    					<div class='clearfix'></div>
 		    				</div>
 							<div class='more'></div>
 						</div>
 					</div>
-				</div>
--->
-				
-				<!--
-<div class='row feed_item' id='"+special+"'>
-					<div class='twelve columns'>
-						<div class='author_info'>
-							<img src='"+author_avatar+"' />
-							<strong>"+handle+"</strong>
-							<div class='clearfix'></div>
-						</div>
-					<div>
-						<img src='"+data_location+"' class='data_img' onClick='likePost(\""+post_token+"\", this)' />
-					</div>
-					<div class='buttons'>
-						<div class='eye'>
-							<img src='img/eye_seen.svg' alt='' />
-							<span>"+times_seen+"</span>
-							<div class='clearfix'></div>
-						</div>
-						<div class='loved'>
-							<img src='img/heart_unloved.svg' alt='' />
-							<span>"+times_liked+"</span>
-							<div class='clearfix'></div>
-						</div>
-						<div class='more'></div>
-					</div>
-				</div>
-			</div>
--->
+				</div>		
+		{{/each}}
 	</script>
-	<script id="create" type="text/x-handlebars-template">
+	
+	<script id="new_post" type="text/x-handlebars-template">
 		<div class="row">
 			<div class="twelve columns">
 				<div class="big_button"><a onclick="capturePhotoEdit();"><i class="icon-camera"></i></a></div>
@@ -121,10 +82,12 @@
 		  <a href="#" id="new_post_submit">SHARE HERE <i class="icon-location"></i></a>
 		</div>
 	</script>
+	
 	<script id="notifications" type="text/x-handlebars-template">
 		Template 3
 	</script>
-	<script id="settings" type="text/x-handlebars-template">
+	
+	<script id="preferences" type="text/x-handlebars-template">
 		Template 4
 	</script>
 	

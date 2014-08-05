@@ -26,15 +26,17 @@ var app = {
 
 
 /******* HELPERS ********/
-Handlebars.registerHelper('each', function(context, options) {
-  var ret = "";
 
-  for(var i=0, j=context.length; i<j; i++) {
-    ret = ret + options.fn(context[i]);
-  }
-
-  return ret;
-});
+	Handlebars.registerHelper('each', function(context, options) {
+	  var ret = "";
+	
+	  for(var i=0, j=context.length; i<j; i++) {
+	    ret = ret + options.fn(context[i]);
+	  }
+	
+	  return ret;
+	});
+	
 /************************/
 
 
@@ -42,36 +44,26 @@ Handlebars.registerHelper('each', function(context, options) {
 
 
 /******* PHONEGAP FUNCTIONS *************/
-function locateMe() {
-    var options = { timeout: 30000 };
-    watchID = navigator.geolocation.getCurrentPosition(onGeoSuccess, onGeoError, options);
-}
 
-function onGeoSuccess(position) {
-    $("input[name='lat']").val(position.coords.latitude);
-    $("input[name='long']").val(position.coords.longitude);
-}
-
-// onError Callback receives a PositionError object
-//
-function onGeoError(error) {
-    console.log('code: '    + error.code    + '\n' +
-          'message: ' + error.message + '\n');
-}
-
-
-$(document).ready(function() {
-	if(! localStorage.getItem("userToken")) {
-		/*********************************/
-		//  send them to login template  //
-		/*********************************/
-	}
-	else {
-		$("input[name='auth_token']").val(localStorage.getItem("userToken"));
-		$("input[name='handle']").val(localStorage.getItem("userHandle"));
+	function locateMe() {
+	    var options = { timeout: 30000 };
+	    watchID = navigator.geolocation.getCurrentPosition(onGeoSuccess, onGeoError, options);
 	}
 	
-});
+	function onGeoSuccess(position) {
+	    $("input[name='lat']").val(position.coords.latitude);
+	    $("input[name='long']").val(position.coords.longitude);
+	}
+	
+	// onError Callback receives a PositionError object
+	//
+	function onGeoError(error) {
+	    console.log('code: '    + error.code    + '\n' +
+	          'message: ' + error.message + '\n');
+	}
+	
+	
+	
 
 
 /***************************************/
@@ -103,75 +95,90 @@ $(document).ready(function() {
 /***************************************/
 
 
+/******** ACTIVATE DEFAULT TEMPLATE ******/
+
+
 
 /*********** TEMPLATING STUFF *********/
 
-	/******* MODEL METHODS ***********/
-	var MODEL_METHOD = {
- 
-        loadPostsNearMe : function(){
-			$("input[name='request']").val("posts_near_me");
-			locateMe();
-			var formdata = formToJSON("#form");
-            $.ajax({
-                url:"http://gobeebot.com/test.php",
-                method:'POST',
-                data: formdata,
-                success:this.handlerData
- 
-            });
-        }
-	};
-	/*********************************/
+/******* FETCH DATA MODELS *******/
 
-	/******* FETCH DATA MODELS *******/
-	function getData(forTemplate) {
-		switch(forTemplate) {
-			case "home":
-/* 				MODEL_METHOD.loadPostNearMe(); */
-				
-				break;
-			case "create":
-				$("input[name='request']").val("new_post");
-				locateMe();
-				var formdata = formToJSON("#form");
-				break;
-			case "notifications":
-				$("input[name='request']").val("");
-				//var data = "";
-				break;
-			case "settings":
-				$("input[name='request']").val("");
-				//var data = "";
-				break;
+
+
+function changePage(choice, formdata) {
+
 			
-		}
+			$.ajax({ 
+					type 		: 'POST', 
+					url 		: 'http://gobeebot.com/',
+					data 		: formdata, 
+					dataType 	: 'json',
+					success 	: function(result) {
+/* 						$("#alerts").html(JSON.stringify(result)); */
+						$("nav a").removeClass("active");
+						$("a[name='"+choice+"']").addClass("active");	
+/* 						$("#alerts").html(JSON.stringify(formdata)); */
+						var templateSource = $("#"+choice).html();
+					    var compiledTemplate = Handlebars.compile(templateSource);
+				   		$("#content-placeholder").html(compiledTemplate(result));
+					   		
+					}, 
+					error 		: function() {
+						$("#alerts").html(JSON.stringify(result));
+						
+					}
 		
-		return data;
-		
+			}); 
+
+}
+locateMe();
+$(document).ready(function() {
+	if(! localStorage.getItem("userToken")) {
+		/*********************************/
+		//  send them to login template  //
+		/*********************************/
+	}
+	else {
+		$("input[name='auth_token']").val(localStorage.getItem("userToken"));
+		$("input[name='handle']").val(localStorage.getItem("userHandle"));
 	}
 	
-	/******** ACTIVATE DEFAULT TEMPLATE ******/
-		var source   = $("#home").html();
-		var template = Handlebars.compile(source);
-		var data = getData("home");
-		$("#content-placeholder").html(template(data));
 	
+	changePage("posts_near_me", formToJSON("#form"));
 	
-	
+});
+
+
+/*changePage(choice, function() {});
+changePage(choice, function(obj) {
+	//bla
+});
+
+var myFunc = function() {//do stuff
+};
+function myFunc() {}
+
+changePage("home", myFunc);	
+*/	
+
+
+	/*********** CHANGE TEMPLATE ***********/
 	$("nav a").click(function() {
-	
-		/********** SHOW ACTIVE PAGE BUTTON ******/
-			$("nav a").removeClass("active");
-			$(this).addClass("active");	
-		/********** SETUP HANDLEBARS TEMPLATE ******/
+		locateMe();
+		//SHOW ACTIVE PAGE BUTTON
+			
+			
+		//SETUP HANDLEBARS TEMPLATE
 		    var choice = $(this).attr("name");
-		    var templateSource = $("#"+choice).html();
-		    var compiledTemplate = Handlebars.compile(templateSource);
-		/********** GET DATA FOR PARTICULAR TEMPLATE ****/
-	   		var data = getData(choice);   		
-	   	/********** COMPILE TEMPLATE ********/
-	   		$("#content-placeholder").html(compiledTemplate(data));
+		    $("input[name='request']").val(choice);
+			if(choice === "new_post") {
+				var templateSource = $("#"+choice).html();
+			    var compiledTemplate = Handlebars.compile(templateSource);
+		   		$("#content-placeholder").html(compiledTemplate());
+			} else {
+				var formdata = formToJSON("#form");	
+				changePage(choice, formdata);
+			}
 	   		
 	});	
 	
