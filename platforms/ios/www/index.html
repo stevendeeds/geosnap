@@ -4,11 +4,10 @@
 		 <meta charset="utf-8" />
         <meta name="format-detection" content="telephone=no" />
         <meta name="viewport" content="target-densityDpi=device-dpi, width=device-width, height=device-height, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no" />
-		<link rel="stylesheet" href="css/gumby.css">
+		<link rel="stylesheet" href="lib/css/gumby.css">
 		<script src="js/jquery-1.10.1.min.js"></script>
-		<script type="text/javascript" src="http://use.typekit.net/fma2eqz.js"></script>
-		<script type="text/javascript">try{Typekit.load();}catch(e){}</script>
 		<link rel="stylesheet" href="css/styles.css" />
+		<script src="cordova.js"></script>
 	<script src="js/handlebars-v1.3.0.js"></script>
 	
 </head>
@@ -33,7 +32,7 @@
 		<input type="hidden" name="lat" />
 		<input type="hidden" name="long"  />
 		<input type="hidden" name="post_data" />
-		<input type="hidden" name="preference_type" />
+		<input type="hidden" name="preference_type" value="load" />
 	</form>
 	<div id="alerts" style="word-break:break-all;"></div>
 	<script id="posts_near_me" type="text/x-handlebars-template">
@@ -71,7 +70,7 @@
 	<script id="new_post" type="text/x-handlebars-template">
 		<div class="row">
 			<div class="twelve columns">
-				<div class="big_button"><a onclick="capturePhotoEdit();"><i class="icon-camera"></i></a></div>
+				<div class="big_button"><a><i class="icon-camera"></i></a></div>
 			</div>
 		</div>
 		
@@ -79,16 +78,149 @@
 			
 		
 		<div class="secondary_big_button">
-		  <a href="#" id="new_post_submit">SHARE HERE <i class="icon-location"></i></a>
+		  <div id="new_post_submit">SHARE HERE <i class="icon-location"></i></div>
 		</div>
 	</script>
 	
 	<script id="notifications" type="text/x-handlebars-template">
-		Template 3
+		notifications
 	</script>
 	
 	<script id="preferences" type="text/x-handlebars-template">
-		Template 4
+						<div class="profilebg" style="background-image: url('http://31.media.tumblr.com/9bba1aa7624e697ff80f195237874519/tumblr_n00uvsmsKM1qhosrgo1_500.jpg');">
+					<div id="profile_av">
+						<a onclick="capturePhotoEdit();" style="display: block;">
+							<img src="{{user_preferences.avatar}}" alt="" id="user_avatar" />
+						</a>
+					</div>
+				</div>
+    			<form action="" id="public_avatar">
+    				<input type="hidden" value="" name="auth_token" />
+    				<input type="hidden" value="" name="handle" />
+    				<input type="hidden" value="preferences" name="request" />
+    				<input type="hidden" value="user_photos" name="preference_type" />
+    				<input type="hidden" name="user_avatar" />
+    			
+    			</form>
+    		
+    			<div class="row">
+    				<div class="twelve columns">
+    					<h5>Public Info</h5>
+    				</div>
+    			</div>
+    			<form action="" id="public_info">
+    				<input type="hidden" value="" name="auth_token" />
+    				<input type="hidden" value="{{user.handle}}" name="handle" />
+    				<input type="hidden" value="preferences" name="request" />
+    				<input type="hidden" value="public" name="preference_type" />
+    				<div class="row">
+			    		<div class="twelve columns">
+			    			<div class="prepend field">
+				    			<span class="adjoined"><i class="icon-vcard"></i></span>
+								<input class="xwide input" type="text" placeholder="{{user_preferences.name}}" name="user_name"/>
+							</div>
+			    		</div>
+		    		</div>
+		    		<div class="row">
+		    			<div class="twelve columns">
+		    				<div class="prepend field">
+		    					<span class="adjoined"><i class="icon-user"></i></span>
+		    					<input type="text" class="xwide input" placeholder="{{user.handle}}" disabled="disabled" name="handle"/>
+		    				</div>
+		    			</div>
+		    		</div>
+		    		<div class="row">
+		    			<div class="twelve columns">
+		    				<div class="prepend field">
+		    					<span class="adjoined"><i class="icon-link"></i></span>
+		    					<input type="text" placeholder="{{user_preferences.url}}" class="xwide input" name="user_url" />
+		    				</div>
+		    			</div>
+		    		</div>
+		    		<div class="row">
+		    			<div class="twelve columns">
+		    				<div class="field">
+		    					 <textarea class="input textarea xwide" placeholder="Description" name="user_description">{{user_preferences.desc}}</textarea>
+		    				</div>
+		    			</div>
+		    		</div>
+		    		<div class="row">
+			    		<div class="twelve columns">
+				    		<div class="field">
+					    		 <label class="checkbox" for="makeprivate">
+								    <input name="makeprivate" id="check2" value="0" type="checkbox">
+								    <span></span> Make Posts Private
+								  </label>
+				    		</div>
+			    		</div>
+		    		</div>
+		    		<div class="row">
+			    		<div class="six columns">
+			    			<div class="medium primary btn">
+							  <a href="#" id="public_info_submit">Save</a>
+							</div>
+							
+			    		</div>
+			    		<div class="six columns">
+				    		<span class="success notice" style="color: green; display: none;"><i class="icon-check"></i></span>
+							<span class="failure notice" style="color: red; display: none;"><i class="icon-cancel"></i></span>
+			    		</div>
+		    		</div>
+	    		</form>
+				<div class="row">
+    				<div class="twelve columns">
+    					<h5>Private Info</h5>
+    				</div>
+    			</div>
+    			
+    			<form action="" id="private_info">
+    				<input type="hidden" value="" name="auth_token" />
+    				<input type="hidden" value="" name="handle" />
+    				<input type="hidden" value="preferences" name="request" />
+    				<input type="hidden" value="private" name="preference_type" />
+	    			<div class="row">
+	    				<div class="twelve columns">
+			    			<label for="">Change Email</label>
+		    			</div>
+		    			<div class="twelve columns">
+		    				<div class="prepend field">
+		    					<span class="adjoined"><i class="icon-mail"></i></span>
+		    					<input type="email" placeholder="{{user.email}}" class="xwide input" name="user_email" />
+		    				</div>
+		    			</div>
+		    		</div>
+
+		    		<div class="row">
+		    			<div class="twelve columns">
+			    			<label for="">Phone</label>
+		    			</div>
+		    			<div class="twelve columns">
+		    				<div class="prepend field">
+		    					<span class="adjoined"><i class="icon-mobile"></i></span>
+		    					<input type="tel" placeholder="{{user_preferences.phone}}" class="xwide input" name="user_phone" />
+		    				</div>
+		    			</div>
+		    		</div>
+		    		<div class="row">
+			    		<div class="six columns">
+			    			<div class="medium primary btn">
+							  <a href="#" id="private_info_submit">Save</a>
+							</div>
+			    		</div>
+			    		<div class="six columns">
+				    		<span class="success notice" style="color: green; display: none;"><i class="icon-check"></i></span>
+							<span class="failure notice" style="color: red; display: none;"><i class="icon-cancel"></i></span>
+				    	</div>
+		    		</div>
+    			</form>
+    			<div class="row">
+    				<div class="twelve columns">
+	    				<a onclick="logout();">Logout<i class="icon-logout"></i></a>
+    				</div>
+    			</div>
+    		
+    		<div class="clearfix"></div>
+		</div>
 	</script>
 	
 	<script src="js/min/app-min.js"></script>

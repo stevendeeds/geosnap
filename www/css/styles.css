@@ -293,12 +293,10 @@ h5 {
   margin-top: 20px;
   text-align: center;
   background: #3da27e;
-}
-.secondary_big_button a {
   color: white;
   font-weight: bold;
 }
-.secondary_big_button a i {
+.secondary_big_button i {
   font-weight: normal;
 }
 .proposedPostImage {
